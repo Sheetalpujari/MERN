@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-//Category schema 
+//Category schema added
 const categorySchema = new mongoose.Schema({
 
     name: {
