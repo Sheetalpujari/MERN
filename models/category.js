@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-
+//Category schema 
 const categorySchema = new mongoose.Schema({
 
     name: {
