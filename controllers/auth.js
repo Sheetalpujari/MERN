@@ -1,5 +1,5 @@
 const User=require("../models/user")
-
+//exporting the files
 
 exports.signup=(req, res) => {
    const user=new User(req.body);
