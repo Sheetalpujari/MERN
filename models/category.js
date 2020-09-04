@@ -1,5 +1,5 @@
-const mongoose = require("mongoose")
-//Category schema added
+const mongoose = require("mongoose");
+
 const categorySchema = new mongoose.Schema({
 
     name: {
@@ -10,6 +10,6 @@ const categorySchema = new mongoose.Schema({
         unique: true,
 
     }
-},{timestamps: true})
+},{timestamps: true});
 
-module.exports = mongoose.model("Category",categorySchema)
+module.exports = mongoose.model("Category",categorySchema);

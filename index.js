@@ -8,7 +8,7 @@ const app = express();
 
 // app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
 
-const port = 8000
+const port = 8000;
 app.get('/login',(req,res)=> res.send("hello this is login"))
 app.get("/admin",(req,res)=>{
     return res.send("You are in login route")
