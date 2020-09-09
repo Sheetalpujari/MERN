@@ -1,5 +1,6 @@
 const User = require("../models/user");
-const Order=require("../models/order");
+const Order = require("../models/order");
+
 exports.getUserById = (req, res, next, id) => {
   User.findById(id).exec((err, user) => {
     if (err || !user) {
@@ -35,45 +36,46 @@ exports.updateUser = (req, res) => {
     }
   );
 };
-exports.userPurchaselist=(req,res)=>{
-  Order.find({user:req.profile._id})
-  .populate("user","_id name")
-  .exec((err,order)=>{
-    if(err){
-      return res.status(400).json({
-        error:"no order in this account"
-      });
-    }
-    return res.json(order);
-  });
-};
-exports.push_order_in_purchaselist=(req,res,next)=>{
-  let purchases=[]
-  req.body.order.products.forEach(product=>{
-       purchases.push({
-         _id:product._id,
-         name:product.name,
-         description:product.description,
-         category:product.category,
-         //quantity=product.quantity,
-         amount:req.body.order.amount,
-         transaction_id:req.body.order.transaction_id
-       });
-   });
 
-   User.findOneAndUpdate(
-     {_id:req.profile._id},
-     {$push:{purchases:purchases}},
-     {$new:true},
-     (err,purchases)=>{
-       if(err){
-         return res.status(400).json({
-           error:"Unable to save the purchase list"
-         });
-       }
+exports.userPurchaseList = (req, res) => {
+  Order.find({ user: req.profile._id })
+    .populate("user", "_id name")
+    .exec((err, order) => {
+      if (err) {
+        return res.status(400).json({
+          error: "No Order in this account"
+        });
+      }
+      return res.json(order);
+    });
+};
+
+exports.pushOrderInPurchaseList = (req, res, next) => {
+  let purchases = [];
+  req.body.order.products.forEach(product => {
+    purchases.push({
+      _id: product._id,
+      name: product.name,
+      description: product.description,
+      category: product.category,
+      quantity: product.quantity,
+      amount: req.body.order.amount,
+      transaction_id: req.body.order.transaction_id
+    });
+  });
+
+  //store thi in DB
+  User.findOneAndUpdate(
+    { _id: req.profile._id },
+    { $push: { purchases: purchases } },
+    { new: true },
+    (err, purchases) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Unable to save purchase list"
+        });
+      }
       next();
-     }
-    
-   );
-  
+    }
+  );
 };
