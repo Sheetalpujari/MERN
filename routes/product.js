@@ -1,17 +1,23 @@
-const express=require("express");
-const router=express.Router;
+const express = require("express");
+const router = express.Router();
 
-const { getProductById,createProduct}=require("../controllers/product");
-const {isSignedIn,isAuthenticated,isAdmin }=require("../controllers/user");
-const {getUserById }=require("../controllers/auth");
+const { getProductById, createProduct,getProduct ,photo} = require("../controllers/product");
+const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
+const { getUserById } = require("../controllers/user");
 
-router.param("userId",getUserById);
-router.param("productId",getProductById);
+//all of params
+router.param("userId", getUserById);
+router.param("productId", getProductById);
 
-router.post("/product/create/:userId",isAdmin,isAuthenticated,isSignedIn,createProduct);
+//all of actual routes
+router.post(
+  "/product/create/:userId",
+  isSignedIn,
+  isAuthenticated,
+  isAdmin,
+  createProduct
+);
 
-
-
-
-
-module.exports=router;
+router.get("/product/:productId",getProduct);
+router.get("/product/photo/:productId",photo); 
+module.exports = router;
