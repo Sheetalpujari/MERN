@@ -119,3 +119,52 @@ exports.updateProduct=(req,res)=>{
   });
 
 };
+
+exports.getAllProducts=(req,res)=>{
+    let limit=req.query.limit?parseInt(req.query.limit): 8;
+    let sortBy=req.query.sortBy ? req.query.sortBy : "_id"
+    Product.find()
+    .populate("category")
+    .select("-photo").limit(limit)
+   .sort([[sortBy,"asc"]])
+    .exec((err,products)=>{
+       if(err){
+         return res.status(400).json({
+           error:"no product found"
+         });
+       }
+       res.json(products);
+     });
+};
+
+exports.updateStock=(req,res,next)=>{
+      let myOperations=req.body.order.products.map(prod=>{
+        return{
+          updateOne:{
+            filter:{_id:prod._id},
+            update:{$inc:{stock:-prod.count,sold:+prod.count}}
+          }
+        };
+      });
+    Product.bulkWrite(myOperations,{},(err,products)=>{
+      if(err){
+        return res.status(400).json({
+          error:"bulk operations failed"
+        });
+      }
+      next();
+    });
+
+};
+
+exports.getAllUniqueCategories=(req,res)=>{
+  Product.distinct("category",(err,category)=>{
+    if(err){
+      return res.status(400).json({
+        error:"no category fpund"
+      });
+    } 
+    res.json(category);
+  
+  });
+};
